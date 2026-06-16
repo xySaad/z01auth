@@ -1,0 +1,18 @@
+query GetPublicUser($githubId: Int) {
+  publicUser: user_public_view(where: { githubId: { _eq: $githubId } }) {
+    login
+    githubId
+    canAccessPlatform
+    canBeAuditor
+    campus
+    piscineGo: events(
+      where: { event: { path: { _like: "%piscine-go%" } } }
+      limit: 1
+    ) {
+      id
+    }
+    module: events(where: { eventId: { _eq: 41 } }) {
+      id
+    }
+  }
+}
