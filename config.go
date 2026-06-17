@@ -31,7 +31,7 @@ type Config struct {
 	graphqlClient graphql.Client
 }
 
-func New(clientID, clientSecret, graphQLToken string) *Config {
+func New(clientID, clientSecret, graphQLToken string) Config {
 	httpClient := &http.Client{
 		Transport: &authedTransport{
 			token:   graphQLToken,
@@ -48,5 +48,5 @@ func New(clientID, clientSecret, graphQLToken string) *Config {
 			AuthURL:  giteaEndpoint("/login/oauth/authorize"),
 			TokenURL: giteaEndpoint("/login/oauth/access_token")},
 	}
-	return &Config{config, client}
+	return Config{config, client}
 }
