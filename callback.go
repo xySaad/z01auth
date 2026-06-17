@@ -52,12 +52,13 @@ func (c *Config) Callback(code string) (*Candidate, error) {
 	user := publicUser.PublicUser[0]
 
 	candidate := &Candidate{
+		GiteaID:        giteaUser.ID,
 		AvatarURL:      giteaUser.AvatarURL,
 		Description:    giteaUser.Description,
 		GiteaLogin:     giteaUser.Login,
-		PlatformAccess: user.CanAccessPlatform,
 		Role:           determineRole(user),
 		GraphqlLogin:   user.Login,
+		PlatformAccess: user.CanAccessPlatform,
 		Campus:         user.Campus,
 	}
 	return candidate, nil

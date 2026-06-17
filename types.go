@@ -37,10 +37,11 @@ const (
 )
 
 type Candidate struct {
-	Role           CandidateRole
+	GiteaID        int
 	AvatarURL      string
 	Description    string
 	GiteaLogin     string
+	Role           CandidateRole
 	GraphqlLogin   string
 	Campus         string
 	PlatformAccess bool
