@@ -10,6 +10,8 @@ import (
 	"golang.org/x/oauth2"
 )
 
+var ErrMultipleUsers = fmt.Errorf("Found multiple users with the same gitea id")
+
 func determineRole(user gqlgen.GetPublicUserPublicUserUser_public_view) CandidateRole {
 	if len(user.Module) > 0 {
 		return CandidateRole_TALENT
@@ -40,14 +42,13 @@ func (c *Config) Callback(code string) (*Candidate, error) {
 		return nil, err
 	}
 
-	fmt.Println("Gitea ID:", giteaUser.ID)
 	publicUser, err := gqlgen.GetPublicUser(context.Background(), c.graphqlClient, giteaUser.ID)
 	if err != nil {
 		return nil, err
 	}
 	json.NewEncoder(os.Stdout).Encode(publicUser)
 	if len(publicUser.PublicUser) > 1 {
-		return nil, fmt.Errorf("found multiple users with the same id")
+		return nil, ErrMultipleUsers
 	}
 	user := publicUser.PublicUser[0]
 

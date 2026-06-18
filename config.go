@@ -2,9 +2,9 @@
 package z01auth
 
 import (
-	"net/http"
-
 	"github.com/Khan/genqlient/graphql"
+	"github.com/xySaad/z01auth/internal"
+	"github.com/xySaad/z01auth/types"
 	"golang.org/x/oauth2"
 )
 
@@ -16,33 +16,18 @@ func giteaEndpoint(path string) string {
 	return GITEA_ENDPOINT + path
 }
 
-type authedTransport struct {
-	token   string
-	wrapped http.RoundTripper
-}
-
-func (t *authedTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	req.Header.Set("Authorization", "Bearer "+t.token)
-	return t.wrapped.RoundTrip(req)
-}
-
 type Config struct {
 	config        oauth2.Config
 	graphqlClient graphql.Client
 }
 
-func New(clientID, clientSecret, graphQLToken string) Config {
-	httpClient := &http.Client{
-		Transport: &authedTransport{
-			token:   graphQLToken,
-			wrapped: http.DefaultTransport,
-		},
-	}
-	client := graphql.NewClient(GRAPHQL_ENDPOINT, httpClient)
+func New(clientID, clientSecret, redirectURL string, token types.TokenSupplier) Config {
+	httpClient := internal.NewHTTPClient(token)
+	client := graphql.NewClient(GRAPHQL_ENDPOINT, &httpClient)
 	config := oauth2.Config{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
-		RedirectURL:  "http://localhost:5051/api/auth/callback",
+		RedirectURL:  redirectURL,
 		Scopes:       []string{"read:user"},
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  giteaEndpoint("/login/oauth/authorize"),
