@@ -13,6 +13,7 @@ import (
 //
 // columns and relationships of "user_public_view"
 type GetPublicUserPublicUserUser_public_view struct {
+	Id                int    `json:"id"`
 	Login             string `json:"login"`
 	GithubId          int    `json:"githubId"`
 	CanAccessPlatform bool   `json:"canAccessPlatform"`
@@ -23,6 +24,9 @@ type GetPublicUserPublicUserUser_public_view struct {
 	// An array relationship
 	Module []GetPublicUserPublicUserUser_public_viewModuleEvent_user `json:"module"`
 }
+
+// GetId returns GetPublicUserPublicUserUser_public_view.Id, and is useful for accessing the field via an interface.
+func (v *GetPublicUserPublicUserUser_public_view) GetId() int { return v.Id }
 
 // GetLogin returns GetPublicUserPublicUserUser_public_view.Login, and is useful for accessing the field via an interface.
 func (v *GetPublicUserPublicUserUser_public_view) GetLogin() string { return v.Login }
@@ -96,6 +100,7 @@ func (v *__GetPublicUserInput) GetGithubId() int { return v.GithubId }
 const GetPublicUser_Operation = `
 query GetPublicUser ($githubId: Int) {
 	publicUser: user_public_view(where: {githubId:{_eq:$githubId}}) {
+		id
 		login
 		githubId
 		canAccessPlatform

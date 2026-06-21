@@ -1,5 +1,6 @@
 query GetPublicUser($githubId: Int) {
   publicUser: user_public_view(where: { githubId: { _eq: $githubId } }) {
+    id
     login
     githubId
     canAccessPlatform

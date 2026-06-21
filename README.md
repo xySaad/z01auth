@@ -23,3 +23,13 @@ The SDK uses the internal Gitea to retrieve the user id, then uses that id to re
 - All staff members are admins in Gitea.
 - All candidates registred in event module (id 41) are talents.
 - All candidates registred in %piscine-go% are poolers.
+
+### How to run
+
+- generate graphql queries
+
+```bash
+go generate
+```
+
+- then use this package in your project

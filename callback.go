@@ -61,6 +61,7 @@ func (c *Config) Callback(code string) (*Candidate, error) {
 		GraphqlLogin:   user.Login,
 		PlatformAccess: user.CanAccessPlatform,
 		Campus:         user.Campus,
+		GraphqlId:      user.Id,
 	}
 	return candidate, nil
 }

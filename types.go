@@ -42,6 +42,7 @@ type Candidate struct {
 	Description    string
 	GiteaLogin     string
 	Role           CandidateRole
+	GraphqlId      int
 	GraphqlLogin   string
 	Campus         string
 	PlatformAccess bool
