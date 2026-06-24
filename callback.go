@@ -23,14 +23,27 @@ func determineRole(user gqlgen.GetPublicUserPublicUserUser_public_view) Candidat
 	return CandidateRole_NONE
 }
 
-func (c *Config) Callback(code string) (*Candidate, error) {
-	config := c.config
-	token, err := config.Exchange(context.Background(), code)
+func (c *Config) Exchange(ctx context.Context, code string, opts ...oauth2.AuthCodeOption) (*oauth2.Token, error) {
+	return c.config.Exchange(ctx, code, opts...)
+}
+func (c *Config) FetchCandidateId(token *oauth2.Token) (int, error) {
+	client := c.config.Client(context.Background(), token)
+	resp, err := client.Get(giteaEndpoint("/api/v1/user"))
 	if err != nil {
-		return nil, err
+		return -1, err
+	}
+	defer resp.Body.Close()
+	giteaUser := &GiteaUser{}
+	err = json.NewDecoder(resp.Body).Decode(giteaUser)
+	if err != nil {
+		return -1, err
 	}
 
-	client := config.Client(context.Background(), token)
+	return giteaUser.ID, nil
+}
+
+func (c *Config) FetchCandidate(token *oauth2.Token) (*Candidate, error) {
+	client := c.config.Client(context.Background(), token)
 	resp, err := client.Get(giteaEndpoint("/api/v1/user"))
 	if err != nil {
 		return nil, err
